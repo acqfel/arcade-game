@@ -43,16 +43,35 @@ let Player = function() {
     this.x = playerX0;
     this.y = playerY0;
     this.sprite = 'images/char-boy.png';
+    this.modal = true;
 };
 
 Player.prototype.update = function(dt) {
+    // If the Player arrives in the water he wins and the modal is activated.
     if (this.y === -8) {
-        console.log("win");
-        //this.y = this.y - 1;
+        //console.log("win");
+        if (this.modal) {
+                $('#myModal').modal('toggle');
+                happyPlayer();
+                this.modal = false;
+        }
 
     }
+    // For each moment in which Player's position is updated,
+    // the distance between enemy and him is calculated.
     dist();
 }
+
+// @description Event listener for a play again button
+$( '.modal-footer' ).on( 'click', '#play-again', function( evt ) {
+    let clicked = $( evt.target );
+    console.log("Play again btn: "+clicked);
+    // Player back to start position
+    player.x = playerX0;
+    player.y = playerY0;
+    player.modal = true;
+
+});
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -92,20 +111,19 @@ Player.prototype.handleInput = function(keys) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 //me
+// Create all Enemies (3)
 let allEnemies = [];
-allEnemies.push(new Enemy(000, 60, 400));
+allEnemies.push(new Enemy(000, 60, 400)); // (x, y, speed)
 allEnemies.push(new Enemy(000, 145, 330));
 allEnemies.push(new Enemy(000, 225, 250));
 
+// Create a Player
 let player = new Player();
 
+// Array that stores distance from each enemy.
 let distance = [0,0,0];
-function shock() {
-    player.x = playerX0;
-    player.y = playerY0;
-    return console.log("SHOCK");
-}
 
+// The function calculates the distance between the Enemy and the Player.
 function dist() {
     if (player.y === 74) {
         distance[0] = player.x - (allEnemies[0].x);
@@ -127,6 +145,39 @@ function dist() {
         }
     }
     //return console.log("enemy: "+allEnemies[2].x + "player: "+player.x);
+}
+
+// If there is a clash between the Player and the Enemy,
+// the player returns to the starting position.
+function shock() {
+    player.x = playerX0;
+    player.y = playerY0;
+    return console.log("SHOCK");
+}
+
+function happyPlayer() {
+    console.log("happy");
+    $('#char-boy').animate({
+            // opacity: '0.0'
+
+            left: '+=50px'
+
+        },500).animate({
+            // opacity: '1.0'
+
+            left: '-=100px'
+
+        },500).animate({
+            // opacity: '0.0'
+
+            left: '+=100px'
+
+        },500).animate({
+            // opacity: '1.0'
+
+            left: '-=50px'
+
+        },500);
 }
 
 // This listens for key presses and sends the keys to your
