@@ -33,8 +33,8 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-//me
 
+//me
 // starting position of the player
 const playerX0 = 200;
 const playerY0 = 320;
@@ -170,24 +170,16 @@ function happyPlayer() {
     console.log("happy");
     $('#char-boy').animate({
             // opacity: '0.0'
-
             left: '+=50px'
-
         },500).animate({
             // opacity: '1.0'
-
             left: '-=100px'
-
         },500).animate({
             // opacity: '0.0'
-
             left: '+=100px'
-
         },500).animate({
             // opacity: '1.0'
-
             left: '-=50px'
-
         },500);
 
 }
