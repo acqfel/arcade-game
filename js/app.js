@@ -73,6 +73,17 @@ $( '.modal-footer' ).on( 'click', '#play-again', function( evt ) {
 
 });
 
+// @description Event listener for area out of modal
+$( 'body' ).on( 'click', '#myModal', function( evt ) {
+    let clicked2 = $( evt.target );
+    console.log("Out of modal: "+clicked2);
+    // Player back to start position
+    player.x = playerX0;
+    player.y = playerY0;
+    player.modal = true;
+
+});
+
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
@@ -178,6 +189,7 @@ function happyPlayer() {
             left: '-=50px'
 
         },500);
+
 }
 
 // This listens for key presses and sends the keys to your
