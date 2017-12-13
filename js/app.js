@@ -1,3 +1,4 @@
+'use strict';
 // Enemies our player must avoid
 let Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -36,39 +37,29 @@ Enemy.prototype.render = function() {
 
 //me
 // starting position of the player
-const playerX0 = 200;
-const playerY0 = 320;
+const PLAYER_X0 = 200;
+const PLAYER_Y0 = 320;
 // Player class
 let Player = function() {
-    this.x = playerX0;
-    this.y = playerY0;
+    this.x = PLAYER_X0;
+    this.y = PLAYER_Y0;
     this.sprite = 'images/char-boy.png';
     this.modal = true;
 };
 
 Player.prototype.update = function(dt) {
-    // If the Player arrives in the water he wins and the modal is activated.
-    if (this.y === -8) {
-        //console.log("win");
-        if (this.modal) {
-                $('#myModal').modal('toggle');
-                happyPlayer();
-                this.modal = false;
-        }
-
-    }
     // For each moment in which Player's position is updated,
     // the distance between enemy and him is calculated.
-    dist();
-}
+    this.dist();
+};
 
 // @description Event listener for a play again button
 $( '.modal-footer' ).on( 'click', '#play-again', function( evt ) {
     let clicked = $( evt.target );
     console.log("Play again btn: "+clicked);
     // Player back to start position
-    player.x = playerX0;
-    player.y = playerY0;
+    player.x = PLAYER_X0;
+    player.y = PLAYER_Y0;
     player.modal = true;
 
 });
@@ -78,15 +69,15 @@ $( 'body' ).on( 'click', '#myModal', function( evt ) {
     let clicked2 = $( evt.target );
     console.log("Out of modal: "+clicked2);
     // Player back to start position
-    player.x = playerX0;
-    player.y = playerY0;
+    player.x = PLAYER_X0;
+    player.y = PLAYER_Y0;
     player.modal = true;
 
 });
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 Player.prototype.handleInput = function(keys) {
 
@@ -116,7 +107,18 @@ Player.prototype.handleInput = function(keys) {
 
     }
     console.log("Player - x : "+this.x+" y: "+this.y);
-}
+
+    // If the Player arrives in the water he wins and the modal is activated.
+    if (this.y === -8) {
+        //console.log("win");
+        if (this.modal) {
+                $('#myModal').modal('toggle');
+                this.happyPlayer();
+                this.modal = false;
+        }
+
+    }
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -124,49 +126,62 @@ Player.prototype.handleInput = function(keys) {
 //me
 // Create all Enemies (3)
 let allEnemies = [];
-allEnemies.push(new Enemy(000, 60, 400)); // (x, y, speed)
-allEnemies.push(new Enemy(000, 145, 330));
-allEnemies.push(new Enemy(000, 225, 250));
+allEnemies.push(new Enemy(0, 60, 400)); // (x, y, speed)
+allEnemies.push(new Enemy(0, 145, 330));
+allEnemies.push(new Enemy(0, 225, 250));
 
 // Create a Player
 let player = new Player();
 
 // Array that stores distance from each enemy.
-let distance = [0,0,0];
+let distance;
 
-// The function calculates the distance between the Enemy and the Player.
-function dist() {
-    if (player.y === 74) {
-        distance[0] = player.x - (allEnemies[0].x);
-        if (distance[0] > -30 && distance[0] < 30){
-            shock();
+
+// The method calculates the distance between the Enemy and the Player.
+Player.prototype.dist = function() {
+    let enemyPath_Y = [74, 156, 238];
+
+    for (var i = 0; i < enemyPath_Y.length; i++) {
+        distance = player.x - (allEnemies[i].x);
+        if (player.y === enemyPath_Y[i]) {
+            if (distance > -30 && distance < 30 ){
+                this.shock();
+            }
         }
     }
-    if (player.y === 156) {
-        distance[1] = player.x - (allEnemies[1].x);
-        if (distance[1] > -30 && distance[1] < 30){
-            shock();
-        }
-    }
-    if (player.y === 238) {
-        console.log("T1");
-        distance[2] = player.x - (allEnemies[2].x);
-        if (distance[2] > -30 && distance[2] < 30){
-            shock();
-        }
-    }
+
+    // if (player.y === 74) {
+    //     distance[0] = player.x - (allEnemies[0].x);
+    //     if (distance[0] > -30 && distance[0] < 30){
+    //         shock();
+    //     }
+    // }
+    // if (player.y === 156) {
+    //     distance[1] = player.x - (allEnemies[1].x);
+    //     if (distance[1] > -30 && distance[1] < 30){
+    //         shock();
+    //     }
+    // }
+    // if (player.y === 238) {
+    //     console.log("T1");
+    //     distance[2] = player.x - (allEnemies[2].x);
+    //     if (distance[2] > -30 && distance[2] < 30){
+    //         shock();
+    //     }
+    // }
     //return console.log("enemy: "+allEnemies[2].x + "player: "+player.x);
 }
 
 // If there is a clash between the Player and the Enemy,
 // the player returns to the starting position.
-function shock() {
-    player.x = playerX0;
-    player.y = playerY0;
+Player.prototype.shock = function() {
+    player.x = PLAYER_X0;
+    player.y = PLAYER_Y0;
     return console.log("SHOCK");
 }
 
-function happyPlayer() {
+// @description animation displayed in the modal when the player wins
+Player.prototype.happyPlayer = function() {
     console.log("happy");
     $('#char-boy').animate({
             // opacity: '0.0'
