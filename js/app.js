@@ -57,9 +57,8 @@ Player.prototype.update = function(dt) {
 $( '.modal-footer' ).on( 'click', '#play-again', function( evt ) {
     let clicked = $( evt.target );
     console.log("Play again btn: "+clicked);
-    // Player back to start position
-    player.x = PLAYER_X0;
-    player.y = PLAYER_Y0;
+    // player object back to start position
+    player.reset();
     player.modal = true;
 
 });
@@ -68,12 +67,16 @@ $( '.modal-footer' ).on( 'click', '#play-again', function( evt ) {
 $( 'body' ).on( 'click', '#myModal', function( evt ) {
     let clicked2 = $( evt.target );
     console.log("Out of modal: "+clicked2);
-    // Player back to start position
-    player.x = PLAYER_X0;
-    player.y = PLAYER_Y0;
+    // player object back to start position
+    player.reset();
     player.modal = true;
-
 });
+
+// Player method that back to start position
+Player.prototype.reset = function() {
+  this.x = PLAYER_X0;
+  this.y = PLAYER_Y0;
+};
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -142,41 +145,21 @@ Player.prototype.dist = function() {
     let enemyPath_Y = [74, 156, 238];
 
     for (var i = 0; i < enemyPath_Y.length; i++) {
-        distance = player.x - (allEnemies[i].x);
-        if (player.y === enemyPath_Y[i]) {
+        distance = this.x - (allEnemies[i].x);
+        if (this.y === enemyPath_Y[i]) {
             if (distance > -30 && distance < 30 ){
                 this.shock();
             }
         }
     }
-
-    // if (player.y === 74) {
-    //     distance[0] = player.x - (allEnemies[0].x);
-    //     if (distance[0] > -30 && distance[0] < 30){
-    //         shock();
-    //     }
-    // }
-    // if (player.y === 156) {
-    //     distance[1] = player.x - (allEnemies[1].x);
-    //     if (distance[1] > -30 && distance[1] < 30){
-    //         shock();
-    //     }
-    // }
-    // if (player.y === 238) {
-    //     console.log("T1");
-    //     distance[2] = player.x - (allEnemies[2].x);
-    //     if (distance[2] > -30 && distance[2] < 30){
-    //         shock();
-    //     }
-    // }
     //return console.log("enemy: "+allEnemies[2].x + "player: "+player.x);
 }
 
 // If there is a clash between the Player and the Enemy,
 // the player returns to the starting position.
 Player.prototype.shock = function() {
-    player.x = PLAYER_X0;
-    player.y = PLAYER_Y0;
+    this.x = PLAYER_X0;
+    this.y = PLAYER_Y0;
     return console.log("SHOCK");
 }
 
